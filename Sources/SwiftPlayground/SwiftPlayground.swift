@@ -4,6 +4,6 @@
 @main
 struct SwiftPlayground {
     static func main() {
-        print("Hello, world!")
+        print("Hello, World!")
     }
 }
