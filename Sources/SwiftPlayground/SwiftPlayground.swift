@@ -1,22 +1,25 @@
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
 
-let lunch = [6.50, 8.00, 5.75, 9.20, 7.10]
-let GRAVITY: Float = 0.3
-let HEIGHT: Float = 30
-let WIDTH: Float = 70
-let BOUNCE: Float = 0.7
-
 @main
 struct SwiftPlayground {
     static func main() {
-        for day in 1...5{
-            print("Day \(day): \(lunch[day-1])")
+        let GRAVITY: Float = 0.3
+        let HEIGHT: Float = 30
+        let WIDTH: Float = 70
+        let BOUNCE: Float = 0.7
+        let particles = [particle(x: 10, y: 10)]
+
+        while true{
+            for p in particles {
+                p.update(grav: GRAVITY, higt: HEIGHT, wdth: WIDTH, bonc: BOUNCE)
+            }
+            render(particles: particles, heit: HEIGHT, widt: WIDTH)
         }
     }
 }
 
-class particle{
+public class particle{
     // The position of the particle
     var x: Float
     var y: Float
@@ -34,36 +37,36 @@ class particle{
     }
 
     // Update physics
-    func update(){
-        self.vy += GRAVITY
+    func update(grav: Float, higt: Float, wdth: Float, bonc: Float){
+        self.vy += grav
 
         self.x += self.vx
         self.y += self.vy
 
-        if self.y >= HEIGHT - 1{
-            self.y = HEIGHT - 1
-            self.vy = -self.vy * BOUNCE
+        if self.y >= higt - 1{
+            self.y = higt - 1
+            self.vy = -self.vy * bonc
         }
-        if self.x <= 0 || self.x > WIDTH - 1 {
-            self.vx = -self.vx * BOUNCE
+        if self.x <= 0 || self.x > wdth - 1 {
+            self.vx = -self.vx * bonc
         }
     }
 }
 
-func render(particles: [particle]) {
+public func render(particles: [particle], heit: Float, widt: Float) {
 
     var frame: [[String]] = []
-    for _ in 0..<Int(HEIGHT) {
-        let row = [String](repeating: " ", count: Int(WIDTH))
+    for _ in 0..<Int(heit) {
+        let row = [String](repeating: "#", count: Int(widt))
         frame.append(row)
     }
 
-    for x in 0...Int(WIDTH){
-        frame[Int(HEIGHT) - 1][x] = "_"
+    for x in 0..<Int(widt){
+        frame[Int(heit) - 1][x] = "_"
     }
 
     for p in particles{
-        if 0 <= Int(p.y) - Int(HEIGHT) && 0 <= Int(p.x) - Int(WIDTH) {
+        if 0 <= Int(p.y) - Int(heit) && 0 <= Int(p.x) - Int(widt) {
             frame[Int(p.y)][Int(p.x)] = "💀"
         }
     }
