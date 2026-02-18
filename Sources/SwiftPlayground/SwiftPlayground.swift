@@ -11,7 +11,7 @@ struct SwiftPlayground {
 
         print(ferrari.info())
         print(porsche.info())
-        let code = encode(string: "This is the same thing but with really big numbers", code_letter: code_letter, code_number: code_number)
+        let code = encode(string: "Thats not good", code_letter: code_letter, code_number: code_number)
         print("Code: \(code)")
         print("Decoded: \(decode(code: code, code_letter: code_letter, code_number: code_number))")
         
