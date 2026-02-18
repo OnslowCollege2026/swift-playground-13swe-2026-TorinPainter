@@ -11,7 +11,7 @@ struct SwiftPlayground {
 
         print(ferrari.info())
         print(porsche.info())
-        let code = encode(string: "This is a very encoded message that is very hard to crack because i have the sypher stop this is great stop", code_letter: code_letter, code_number: code_number)
+        let code = encode(string: "This is the same thing but with really big numbers", code_letter: code_letter, code_number: code_number)
         print("Code: \(code)")
         print("Decoded: \(decode(code: code, code_letter: code_letter, code_number: code_number))")
         
@@ -41,7 +41,7 @@ func encode(string: String, code_letter: [String], code_number: [Int]) -> [Int] 
     var fin: [Int] = []
     for letter in string.lowercased().split(separator: ""){
         if let i: Int = code_letter.firstIndex(of: String(letter)){
-            fin.append(code_number[i] * 3)
+            fin.append(code_number[i] * 74)
         }
     }
     return fin
@@ -50,7 +50,7 @@ func encode(string: String, code_letter: [String], code_number: [Int]) -> [Int] 
 func decode(code: [Int], code_letter: [String], code_number: [Int]) -> String {
     var fin: String = ""
     for num in code {
-        if let i: Int = code_number.firstIndex(of: Int(num / 3)) {
+        if let i: Int = code_number.firstIndex(of: Int(num / 74)) {
             fin += code_letter[i]
         }
     }
