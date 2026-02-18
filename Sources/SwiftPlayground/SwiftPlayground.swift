@@ -4,14 +4,14 @@
 @main
 struct SwiftPlayground {
     static func main() {
-        let code_letter = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
-        let code_number = [789235,8345,87235,34587,89456,9837,9238,938475,64926,86600,483,25,7,678,34,456,4567,13456,6,34567,7876,1000,1235,1564,1356,2344]
+        let code_letter = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", " "]
+        let code_number = [789235,8345,87235,34587,89456,9837,9238,938475,64926,86600,483,25,7,678,34,456,4567,13456,6,34567,7876,1000,1235,1564,1356,2344, 999999]
         let ferrari: Vehical = Vehical(brand: "Ferrari", model: "308", year: 1978)
         let porsche: Vehical = Vehical(brand: "Porsche", model: "Tycan", year: 2020)
 
         print(ferrari.info())
         print(porsche.info())
-        let code = encode(string: "Please for the love of everything would you please put down the gun", code_letter: code_letter, code_number: code_number)
+        let code = encode(string: "You see this is interesting because it does not put spaces in the decoded part and you cant do any punctuation or that will break it stop you have to write this like a fax where you cant use any full stops stop", code_letter: code_letter, code_number: code_number)
         print("Code: \(code)")
         print("Decoded: \(decode(code: code, code_letter: code_letter, code_number: code_number))")
         
