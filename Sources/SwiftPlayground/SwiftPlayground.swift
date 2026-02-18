@@ -11,8 +11,9 @@ struct SwiftPlayground {
 
         print(ferrari.info())
         print(porsche.info())
-        print("John: \(encode(string: "John", code_letter: code_letter, code_number: code_number))")
-        print("\(decode(code: encode(string: "John", code_letter: code_letter, code_number: code_number), code_letter: code_letter, code_number: code_number))")
+        let code = encode(string: "John", code_letter: code_letter, code_number: code_number)
+        print("John: \(code)")
+        print("\(decode(code: code, code_letter: code_letter, code_number: code_number))")
         
     }
 }
