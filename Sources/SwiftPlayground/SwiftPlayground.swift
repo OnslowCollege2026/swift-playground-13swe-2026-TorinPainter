@@ -11,7 +11,7 @@ struct SwiftPlayground {
 
         print(ferrari.info())
         print(porsche.info())
-        let code = encode(string: "You see this is interesting because it does not put spaces in the decoded part and you cant do any punctuation or that will break it stop you have to write this like a fax where you cant use any full stops stop", code_letter: code_letter, code_number: code_number)
+        let code = encode(string: "This is a very encoded message that is very hard to crack because i have the sypher stop this is great stop", code_letter: code_letter, code_number: code_number)
         print("Code: \(code)")
         print("Decoded: \(decode(code: code, code_letter: code_letter, code_number: code_number))")
         
