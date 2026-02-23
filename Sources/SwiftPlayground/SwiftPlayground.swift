@@ -56,6 +56,7 @@ enum Difficulty {
     case difficult
     case imposible
     case hell
+    case evil
 }
 
 struct Quest {
