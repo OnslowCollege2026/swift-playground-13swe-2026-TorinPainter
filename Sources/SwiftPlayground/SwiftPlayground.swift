@@ -6,115 +6,78 @@ import Foundation
 @main
 struct SwiftPlayground {
     static func main() {
-        let book1 = Book(title: "Johns large elephant", author: "John", pages: 2)
-        let update = Update()
-        
-        print(book1.summary() + " -------- Thickness: \(book1.get_thickness()) ---- Weight: \(book1.get_weight())")
+        let receipts: [Receipt] = rentals.map {rental in
+            let videoID: Video = videos.first {$0.id == rental.videoID} ?? Video(id: UUID(), title: "", dailyRate: 0)
+            return Receipt(videoID: rental.videoID,
+                           customerID: rental.customerID,
+                           pricePaid: videoID.dailyRate * Double(rental.dayToReturn - rental.dayIssued),
+                           overdueFeeCharged: rental.wasReturned)
+        }
     }
 }
 
-class Update {
-    var lastUpdateTime: TimeInterval = 0
-    let updateInterval: TimeInterval = 1.0 / 60.0
-    var timer: Timer?
-
-    func start() {
-        // Initialize the time so the first delta isn't huge
-        lastUpdateTime = Date().timeIntervalSince1970
-        
-        timer = Timer.scheduledTimer(withTimeInterval: updateInterval, repeats: true) { [weak self] _ in
-            guard let self = self else { return }
-            
-            let currentTime = Date().timeIntervalSince1970
-            let delta = currentTime - self.lastUpdateTime
-            self.lastUpdateTime = currentTime
-            
-            self.update(delta: delta)
-        }
-    }
-    
-    func stop() {
-        timer?.invalidate()
-        timer = nil
-    }
-
-    func update(delta: TimeInterval) {
-        // Your logic here
-        print("Update: delta \(delta)")
-    }
+struct Video: Identifiable {
+    let id: UUID
+    let title: String
+    let dailyRate: Double
 }
 
-struct Book {
-    var title: String
-    var author: String
-    var pages: Int
-    
-    func summary() -> String {
-        return "\(title) - by \(author), total pages: \(pages)"
-    }
-    
-    // Something fun in mm
-    func get_thickness() -> String {
-        var thickness_mm = 0.1 * Double(pages)
-        var unit: String = "mm"
-        if thickness_mm >= 10 {
-            thickness_mm /= 10
-            unit = "cm"
-            if thickness_mm >= 100 {
-                thickness_mm /= 100
-                unit = "m"
-                if thickness_mm >= 1000 {
-                    thickness_mm /= 1000
-                    unit = "km"
-                }
-            }
-        }
-        return "\(thickness_mm) \(unit)"
-    }
-    
-    func get_weight() -> String {
-        var weight = 4.5 * Double(pages)
-        var unit: String = "grams"
-        if weight >= 1000 {
-            weight /= 1000
-            unit = "kilo grams"
-            if weight >= 1000 {
-                weight /= 1000
-                unit = "tonnes"
-                if weight >= 1000 {
-                    weight /= 1000
-                    unit = "kilotonnes"
-                    if weight >= 1000 {
-                        weight /= 1000
-                        unit = "megatonnes"
-                        if weight >= 1000 {
-                            weight /= 1000
-                            unit = "gigatonnes"
-                        }
-                    }
-                }
-            }
-        }
-        return "\(weight) \(unit)"
-    }
+struct Customer: Identifiable {
+    let id: UUID
+    let name: String
+    let address: String
 }
 
-struct StopWatch {
-    var seconds: Double
-    var isRunning: Bool
-    
-    mutating func start() {
-        isRunning = true
-    }
-    
-    mutating func tick () {
-        if isRunning == true {
-            seconds += 1
-        }
-    }
-    
-    mutating func reset() {
-        isRunning = false
-        seconds = 0
-    }
+struct VideoRental {
+    let videoID: Video.ID
+    let customerID: Customer.ID
+    let dayIssued: Int
+    let dayToReturn: Int
+    let wasReturned: Bool
 }
+
+struct Receipt {
+    let videoID: Video.ID
+    let customerID: Customer.ID
+    let pricePaid: Double
+    let overdueFeeCharged: Bool
+}
+
+let videos: [Video] = [
+    Video(id: UUID(), title: "The Matrix", dailyRate: 4.50),
+    Video(id: UUID(), title: "Toy Story", dailyRate: 3.00),
+    Video(id: UUID(), title: "Spirited Away", dailyRate: 4.00),
+    Video(id: UUID(), title: "Interstellar", dailyRate: 5.00),
+    Video(id: UUID(), title: "Moana", dailyRate: 3.50)
+]
+
+let customers: [Customer] = [
+    Customer(id: UUID(), name: "Aroha Ngata", address: "14 Kowhai Street"),
+    Customer(id: UUID(), name: "Liam Patel", address: "8 Tui Avenue"),
+    Customer(id: UUID(), name: "Mia Thompson", address: "22 Rimu Road"),
+    Customer(id: UUID(), name: "Noah Wiremu", address: "3 Pukeko Lane"),
+    Customer(id: UUID(), name: "Eva Chen", address: "11 Nikau Place")
+]
+
+let rentals: [VideoRental] = [
+    VideoRental(videoID: videos[0].id,
+        customerID: customers[0].id,
+        dayIssued: 1, dayToReturn: 3,
+        wasReturned: true),
+    VideoRental(videoID: videos[1].id,
+        customerID: customers[1].id,
+        dayIssued: 2, dayToReturn: 4,
+        wasReturned: false),
+    VideoRental(videoID: videos[2].id,
+        customerID: customers[2].id,
+        dayIssued: 2, dayToReturn: 5,
+        wasReturned: true),
+    VideoRental(videoID: videos[3].id,
+        customerID: customers[3].id,
+        dayIssued: 3, dayToReturn: 6,
+        wasReturned: false),
+    VideoRental(videoID: videos[4].id,
+        customerID: customers[4].id,
+        dayIssued: 4, dayToReturn: 6,
+        wasReturned: true)
+]
