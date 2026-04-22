@@ -1,70 +1,34 @@
+import Foundation
+import GRDB
+
 // The Swift Programming Language
 // https://docs.swift.org/swift-book
+
+/// Planing
+/// Task: Super car rental
+/// Information to store:
+/// Renter: Name, dob, bank card number, bank card scurity code,  bank card expirery date
+/// Vehical: Display Name, licence plate number, insurance cost, vehical cost, vehical age, model, engine specifications, current fuel level
+
+let ui: Interface = Interface()
 
 @main
 struct SwiftPlayground {
     static func main() {
-        print("Hello world!")
-        // I don't print anything here but they do work, also didn't have enough time.
+        let pick = ui.printWelcome()
+        print(pick)
     }
 }
 
 struct Vehical {
-    var brand: String
-    var model: String
-    var year: Int
-
-    func info() -> String {
-        return "Brand: \(brand), Model: \(model), Year: \(year)"
-    }
-}
-
-struct Student {
-    let ID: Int
-    let NSN: Int
-
-    var name: String
-    var age: Int
-    var email: String
-}
-
-struct BankAccount {
-    var owner: String
-    var balace: Double
+    // All of the things needed for renting a car
+    public var displayName: String
+    public var disctription: String
+    public let model: String
+    public let licencePlateNumber: String
+    public var insuranceCost: Double
+    public let vehicalCost: Double
+    public let vehicalPerchaseDate: Date
+    var currentFuelLevel: Double // Leters
     
-    var description: String {
-        return "\(owner) has \(balace) in their bank account, in their bank account!"
-    }
-}
-
-struct Rectangle {
-    var width: Double
-    var hight: Double
-    
-    // I did this both ways, they work the same
-    public func get_area() -> Double {
-        return width * hight
-    }
-    
-    // This one is cleaner
-    var area: Double {return width * hight}
-}
-
-enum Difficulty {
-    case easy
-    case hard
-    case difficult
-    case imposible
-    case hell
-    case evil
-}
-
-struct Quest {
-    let title: String
-    var difficulty: Difficulty
-    var reward: Double
-    
-    public func printBadge(){
-        print("\(title) - \(difficulty) level quest - reward: \(reward) XP")
-    }
 }
