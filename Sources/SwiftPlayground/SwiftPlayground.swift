@@ -15,8 +15,11 @@ let ui: Interface = Interface()
 @main
 struct SwiftPlayground {
     static func main() {
-        let pick = ui.printWelcome()
-        print(pick)
+        var rentals: [Rental] = []
+        var pick = ui.printWelcome()
+        if pick == "a" {
+            ui.addVehical()
+        }
     }
 }
 
@@ -30,5 +33,22 @@ struct Vehical {
     public let vehicalCost: Double
     public let vehicalPerchaseDate: Date
     var currentFuelLevel: Double // Leters
+    
+}
+
+struct Customer {
+    public let name: String
+    public let dob: Date
+    private let bankCardNumber: Int
+    private let csc: Int
+    private let cardExpirery: Data
+    
+}
+
+struct Rental {
+    public let customer: Customer
+    public let vehicle: Vehical
+    public var returnDate: Date
+    public let pickupDate: Date
     
 }
