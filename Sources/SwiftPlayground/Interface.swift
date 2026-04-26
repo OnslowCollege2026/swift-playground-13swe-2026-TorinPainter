@@ -47,22 +47,23 @@ struct Interface {
     
     public func addVehical() {
         var current: String = "name"
-        var vals: Dictionary = [
-            "name": "",
-            "dis": "",
-            "model": "",
-            "licence": "",
-            "insurance": "",
-            "cost": "",
-            "age": "",
-            "fuel": ""
+        var vals = [
+            ("name", "Johns large car"),
+            ("dis", ""),
+            ("model", ""),
+            ("licence", ""),
+            ("insurance", ""),
+            ("cost", ""),
+            ("age", ""),
+            ("fuel", "")
         ]
         
         print(vals)
         for val in vals{
             // Set the current editing value
-            current = val.key
+            current = val.0
             print(current)
+            let realVal = vals[vals.firstIndex(where: {$0 == val}) ?? 0]
             
             clear()
             print("----------------------------------------------------")
@@ -70,17 +71,17 @@ struct Interface {
             print("----------------------------------------------------")
             // This will prints a <--- if it is the current one being edited
             //           |---------------^---------------|
-            print("Name \(current == "name" ? "<---" : "") \(vals[val.key] != "" ? "= \(vals[val.key]!)" : "")")
-            print("Description \(current == "dis" ? "<---" : "") \(vals[val.key] != "" ? "= \(vals[val.key]!)" : "")")
-            print("Vehical Model \(current == "model" ? "<---" : "") \(vals[val.key] != "" ? "= \(vals[val.key]!)" : "")")
-            print("Plate Number \(current == "licence" ? "<---" : "") \(vals[val.key] != "" ? "= \(vals[val.key]!)" : "")")
+            print("Name \(current == "name" ? "<---" : "") \(vals[0].1 != "" ? "= \(vals[0].1)" : "")")
+            print("Description \(current == "dis" ? "<---" : "") \(vals[1].1 != "" ? "= \(vals[1].1)" : "")")
+            print("Vehical Model \(current == "model" ? "<---" : "") \(vals[2].1 != "" ? "= \(vals[2].1)" : "")")
+            print("Plate Number \(current == "licence" ? "<---" : "") \(vals[3].1 != "" ? "= \(vals[3].1)" : "")")
             print("Insurance Cost \(current == "insurance" ? "<---" : "")")
             print("Vehical Cost \(current == "cost" ? "<---" : "")")
             print("Vehical Age \(current == "age" ? "<---" : "")")
             print("Current fuel level \(current == "fuel" ? "<---" : "")")
             let inp = readLine()
             if let input = inp {
-                vals[val.key] = input
+                vals[vals.firstIndex(where: {$0 == val}) ?? 0].1 = input
             }
         }
     }
