@@ -23,16 +23,7 @@ let ui: Interface = Interface()
             csc: 123,
             cardExpirery: dateFrom(year: 2027, month: 12, day: 01)
         ),
-        vehicle: Vehicle(
-            displayName: "Blue Lightning",
-            disctription: "A fuel-efficient compact car perfect for city driving.",
-            model: "Tesla Model 3",
-            licencePlateNumber: "B87-JKL",
-            insuranceCost: 15.50,
-            vehicalCost: 45000.00,
-            vehicalPerchaseDate: dateFrom(year: 2023, month: 1, day: 15),
-            currentFuelLevel: 85.0
-        ),
+        vehicle: vehicles[0],
         returnDate: dateFrom(year: 2026, month: 5, day: 10),
         pickupDate: dateFrom(year: 2026, month: 5, day: 01)
     ),
@@ -44,16 +35,7 @@ let ui: Interface = Interface()
             csc: 456,
             cardExpirery: dateFrom(year: 2028, month: 08, day: 01)
         ),
-        vehicle: Vehicle(
-            displayName: "The Mountain Mover",
-            disctription: "Rugged 4x4 with plenty of room for camping gear.",
-            model: "Ford F-150",
-            licencePlateNumber: "TRK-990",
-            insuranceCost: 25.00,
-            vehicalCost: 55000.00,
-            vehicalPerchaseDate: dateFrom(year: 2024, month: 6, day: 10),
-            currentFuelLevel: 120.0
-        ),
+        vehicle: vehicles[1],
         returnDate: dateFrom(year: 2026, month: 4, day: 30),
         pickupDate: dateFrom(year: 2026, month: 4, day: 25)
     ),
@@ -65,27 +47,55 @@ let ui: Interface = Interface()
             csc: 789,
             cardExpirery: dateFrom(year: 2026, month: 10, day: 01)
         ),
-        vehicle: Vehicle(
-            displayName: "Silver Streak",
-            disctription: "Luxury sedan with premium leather interior.",
-            model: "BMW 5 Series",
-            licencePlateNumber: "LUX-001",
-            insuranceCost: 40.00,
-            vehicalCost: 62000.00,
-            vehicalPerchaseDate: dateFrom(year: 2025, month: 2, day: 28),
-            currentFuelLevel: 65.5
-        ),
+        vehicle: vehicles[2],
         returnDate: dateFrom(year: 2026, month: 5, day: 15),
         pickupDate: dateFrom(year: 2026, month: 5, day: 12)
+    )
+]
+
+/// Another thing with bogus information, taken from gemini's list above
+@MainActor var vehicles: [Vehicle] = [
+    Vehicle(
+        displayName: "Silver Streak",
+        disctription: "Luxury sedan with premium leather interior.",
+        model: "BMW 5 Series",
+        licencePlateNumber: "LUX001",
+        insuranceCost: 40.00,
+        vehicalCost: 62000.00,
+        vehicalAge: 2,
+        currentFuelLevel: 65.5
+    ),
+    Vehicle(
+        displayName: "The Mountain Mover",
+        disctription: "A posh but rugged 4x4 with plenty of room for camping gear.",
+        model: "Ford F-150",
+        licencePlateNumber: "TRK990",
+        insuranceCost: 25.00,
+        vehicalCost: 55000.00,
+        vehicalAge: 3,
+        currentFuelLevel: 120.0
+    ),
+    Vehicle(
+        displayName: "Blue Lightning",
+        disctription: "A fuel-efficient compact car perfect for city driving while looking fancy.", // And racist
+        model: "Tesla Model 3",
+        licencePlateNumber: "B87JKL",
+        insuranceCost: 15.50,
+        vehicalCost: 45000.00,
+        vehicalAge: 4,
+        currentFuelLevel: 85.0
     )
 ]
 
 @main
 struct SwiftPlayground {
     static func main() {
-        var pick = ui.printWelcome()
-        if pick == "a" {
-            ui.addVehical()
+        var notdone = true
+        while notdone{
+            var pick = ui.printWelcome()
+            if pick == "a" {
+                ui.addVehical()
+            }
         }
     }
 }
@@ -103,7 +113,7 @@ public struct Vehicle {
     public let licencePlateNumber: String
     public var insuranceCost: Double
     public let vehicalCost: Double
-    public let vehicalPerchaseDate: Date
+    public let vehicalAge: Double
     var currentFuelLevel: Double // Leters
     
 }
