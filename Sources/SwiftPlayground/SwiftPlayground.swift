@@ -18,45 +18,51 @@ let ui: Interface = Interface()
 @MainActor var rentals: [Rental] = [
     Rental(
         id: "964",
-        customer: Customer(
-            id: "123",
-            name: "Alex River",
-            dob: dateFrom(year: 1992, month: 5, day: 14),
-            bankCardNumber: 1234567890123456,
-            csc: 123,
-            cardExpirery: dateFrom(year: 2027, month: 12, day: 01)
-        ),
+        customer: customers[2],
         vehicle: vehicles[0],
         returnDate: dateFrom(year: 2026, month: 5, day: 10),
         pickupDate: dateFrom(year: 2026, month: 5, day: 01)
     ),
     Rental(
         id: "846",
-        customer: Customer(
-            id: "575",
-            name: "Jordan Smith",
-            dob: dateFrom(year: 1985, month: 11, day: 22),
-            bankCardNumber: 9876543210987654,
-            csc: 456,
-            cardExpirery: dateFrom(year: 2028, month: 08, day: 01)
-        ),
+        customer: customers[1],
         vehicle: vehicles[1],
         returnDate: dateFrom(year: 2026, month: 4, day: 30),
         pickupDate: dateFrom(year: 2026, month: 4, day: 25)
     ),
     Rental(
         id: "730",
-        customer: Customer(
-            id: "464",
-            name: "Sam Taylor",
-            dob: dateFrom(year: 1998, month: 3, day: 05),
-            bankCardNumber: 5544332211009988,
-            csc: 789,
-            cardExpirery: dateFrom(year: 2026, month: 10, day: 01)
-        ),
+        customer: customers[0],
         vehicle: vehicles[2],
         returnDate: dateFrom(year: 2026, month: 5, day: 15),
         pickupDate: dateFrom(year: 2026, month: 5, day: 12)
+    )
+]
+
+@MainActor var customers: [Customer] = [
+    Customer(
+        id: "464",
+        name: "Sam Taylor",
+        dob: dateFrom(year: 1998, month: 3, day: 05),
+        bankCardNumber: 5544332211009988,
+        csc: 789,
+        cardExpirery: dateFrom(year: 2026, month: 10, day: 01)
+    ),
+    Customer(
+        id: "575",
+        name: "Jordan Smith",
+        dob: dateFrom(year: 1985, month: 11, day: 22),
+        bankCardNumber: 9876543210987654,
+        csc: 456,
+        cardExpirery: dateFrom(year: 2028, month: 08, day: 01)
+    ),
+    Customer(
+        id: "123",
+        name: "Alex River",
+        dob: dateFrom(year: 1992, month: 5, day: 14),
+        bankCardNumber: 1234567890123456,
+        csc: 123,
+        cardExpirery: dateFrom(year: 2027, month: 12, day: 01)
     )
 ]
 
@@ -107,6 +113,8 @@ struct SwiftPlayground {
                 ui.addVehical()
             } else if pick == "r"{
                 ui.removeVehicle()
+            } else if pick == "c"{
+                ui.createRental()
             }
         }
     }

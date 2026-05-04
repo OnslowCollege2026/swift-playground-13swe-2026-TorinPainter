@@ -6,6 +6,8 @@ import Foundation
 //  Created by Torin Painter on 22/04/2026.
 //
 
+// TODO: Use map filter and reduce on the finding values function because you need to find the one with a sertain id or name, and that would work there
+
 struct Interface {
     func clear(){
         print("\u{001B}")
@@ -148,7 +150,8 @@ struct Interface {
         var valid1 = false
         var valid2 = false
         var vals = [
-            ("vehicle", "")
+            ("vehicle", ""),
+            ("customer", "")
         ]
         // This is procidure now
         while valid1 == false{
@@ -181,8 +184,65 @@ struct Interface {
         }
         
         while valid2 == false {
-            print("Please pick a valid customer")
-            // TODO: Continue
+            // This is the same as the first but with customers instead of the vehicles
+            for customer in customers {
+                print("\((customers.firstIndex(where: {$0.name == customer.name}) ?? 0) + 1) -- \(customer.name)")
+            }
+            
+            let pick = readLine() // Get input
+            
+            if pick?.lowercased() == "q" {return}
+            
+            if let p: Int = Int(pick ?? "fail") { // Check that it can be an int
+                if customers.count >= p && p > 0{
+                    clear()
+                    
+                    vals[1].1 = customers[p - 1].id
+                    print("A-maze-ing")
+                    valid2 = true
+                } else {
+                    valid2 = false
+                }
+            } else {
+                valid2 = false
+            }
+        }
+        
+        // Now we get the dates that they want the vehicle for
+        var valid3 = false
+        check: while valid3 == false {
+            clear()
+            print("Please enter the date that the rental will start in dd/mm/yyyy format")
+            
+            let raw = readLine()
+            if let text = raw {
+                let split = text.split(separator: "/")
+                var out: [Int] = [] // The out of the checks below
+                for spl in 0...split.count - 1 {
+                    // If it does not conform to a int then it should automaticaly fail the checks after and ask again
+                    let new = Int(split[spl]) ?? 99999 // Just to make sure :D
+                    if spl > 1 {
+                        if new > 9999 && new < 0{
+                            valid3 = false
+                            continue check
+                        }
+                    } else {
+                        if new > 99 && new < 0{
+                            valid3 = false
+                            continue check
+                        }
+                    }
+                    out.append(new)
+                }
+                // This is so that if it fails to add something to array, it will fail and not return
+                // because for some reason the continue thing dosn't work at all
+                if out.count == 3 {
+                    // If everything is right, continue here
+                    // TODO: Continue here
+                } else {
+                    valid3 = false
+                }
+            }
         }
     }
 }
