@@ -7,6 +7,7 @@ import Foundation
 //
 
 // TODO: Use map filter and reduce on the finding values function because you need to find the one with a sertain id or name, and that would work there
+// TODO: Should also make sure that the date that they enter is after the first one, because you can't return the car before you have taken it out
 
 struct Interface {
     func clear(){
@@ -151,7 +152,9 @@ struct Interface {
         var valid2 = false
         var vals = [
             ("vehicle", ""),
-            ("customer", "")
+            ("customer", ""),
+            ("startDate", ""),
+            ("endDate", "")
         ]
         // This is procidure now
         while valid1 == false{
@@ -215,34 +218,153 @@ struct Interface {
             print("Please enter the date that the rental will start in dd/mm/yyyy format")
             
             let raw = readLine()
-            if let text = raw {
-                let split = text.split(separator: "/")
-                var out: [Int] = [] // The out of the checks below
-                for spl in 0...split.count - 1 {
-                    // If it does not conform to a int then it should automaticaly fail the checks after and ask again
-                    let new = Int(split[spl]) ?? 99999 // Just to make sure :D
-                    if spl > 1 {
-                        if new > 9999 && new < 0{
-                            valid3 = false
-                            continue check
-                        }
-                    } else {
-                        if new > 99 && new < 0{
-                            valid3 = false
-                            continue check
-                        }
-                    }
-                    out.append(new)
+            
+            // The quit at any time
+            if raw?.lowercased() == "q" {return}
+            
+            let check = checkDate(raw: raw, todo: { out in
+                vals[2].1 = "\(out[0]) \(out[1]) \(out[2])"
+            })
+            
+            if check {
+                // check worked
+                if doesThatLookRight(vals: vals){
+                    valid3 = true
                 }
-                // This is so that if it fails to add something to array, it will fail and not return
-                // because for some reason the continue thing dosn't work at all
-                if out.count == 3 {
-                    // If everything is right, continue here
-                    // TODO: Continue here
-                } else {
-                    valid3 = false
-                }
+            } else {
+                continue check
             }
         }
+        
+        // finaly get the end date same as above
+        var valid4 = false
+        while valid4 == false {
+            clear()
+            print("Now please enter the end date of the rental in the same format")
+            
+            let raw = readLine()
+            
+            // Same quit
+            if raw?.lowercased() == "q" {return}
+            
+            let check = checkDate(raw: raw) { out in
+                vals[3].1 = "\(out[0]) \(out[1]) \(out[2])"
+            }
+            
+            if check {
+                if doesThatLookRight(vals: vals){
+                    valid4 = true
+                }
+            } else {
+                continue
+            }
+        }
+    }
+    
+    // To check if the date is correct
+    func checkDate(raw: String?, todo: (_ out: [Int]) -> Void) -> Bool{
+        // 1. Make the raw into a non-optinal
+        if let text = raw {
+            // 2. Split it by the slashes
+            let split = text.split(separator: "/")
+            
+            // 3. Prepare the out variable
+            var out: [Int] = []
+            
+            // 4. For each section of the now splitted string
+            for spl in 0...split.count - 1 {
+                // 5. Make sure that it conforms to an int, and if it doesn't then make sure that it will fail the next checks
+                let new = Int(split[spl]) ?? 99999
+                // 6. Check if the section we are on is the year
+                if spl > 1 {
+                    // 6.5 Check that its a max of a 4 digit number and not in the past by too far
+                    if new > 9999 && new < 1999{
+                        return false
+                    }
+                } else { // 7. if its a day or month
+                    // 7.5 check that its a 2 digit number and not below 0 days/months
+                    if new > 99 && new < 0{
+                        return false
+                    }
+                }
+                // 8. Append the values to the out array
+                out.append(new)
+            }
+            // 9. Check that the ammount of values are 3 because there should be a day, month and a year and nothing more or less
+            if out.count == 3 {
+                // If everything is right, continue here
+                // 10. call the closure and exit
+                todo(out)
+                return true
+            } else {
+                return false
+            }
+        } else {
+            return false
+        }
+    }
+    
+    // Ask the user if what they have so far looks right
+    func doesThatLookRight(vals: [(String, String)]) -> Bool{
+        clear()
+        print("Does the current values look correct? y/n")
+        for i in 0...(vals.count - 1) {
+            print("[\(vals[i].0)]: \(vals[i].1)")
+        }
+        let response = readLine()
+        if response?.lowercased() == "y" {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    // List the rentals in a pleasing to look at way
+    @MainActor public func listRentals(){
+        clear()
+        print("Listing all rentals (press enter to continue)")
+        for i in rentals {
+            // A better looking print
+            print("---------------------------------")
+            print("ID: \(i.id)\n")
+            print("Customer:\n\(i.customer.name)\n")
+            print("Vehicle:\n\(i.vehicle.displayName)\n\(i.vehicle.model)\nFuel = \(i.vehicle.currentFuelLevel)\n")
+            print("Start Date:\n\(i.pickupDate)\n")
+            print("End Date:\n\(i.returnDate)\n")
+        }
+        // Wait till they enter anything to continue
+        if readLine() != nil{
+            return
+        }
+    }
+    
+    @MainActor public func cancelRental(){
+        clear()
+        print("Which rental would you like to remove?")
+        for i in rentals {
+            // A better looking print same but more compact
+            print("---------------------------------")
+            print("ID: \(i.id)")
+            print("Customer:\n\(i.customer.name)")
+            print("Vehicle:\n\(i.vehicle.displayName)")
+            print("Start Date:\n\(i.pickupDate)")
+            print("End Date:\n\(i.returnDate)")
+        }
+        print("Please enter the id of the rental that you wish to remove:")
+        let raw = readLine()
+        // Check if it can be a int, then check if the int matches any of the ids with find value
+        if let text = raw {
+            let id = Int(text) ?? 0 // Since no id will be 0 this will fail
+            
+            // TODO: Continue here
+        }
+    }
+    
+    @MainActor func findRental(id: Int) -> Rental{
+        // Find things in arrays because that would work and be needed for somethings because everything should be id based
+        for i in rentals {
+            if Int(i.id) == id {return i}
+        }
+        // TODO: Add return statment that will fail the other things something like the array index
     }
 }

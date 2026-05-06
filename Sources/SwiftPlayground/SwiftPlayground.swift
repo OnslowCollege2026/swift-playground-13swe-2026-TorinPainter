@@ -115,6 +115,10 @@ struct SwiftPlayground {
                 ui.removeVehicle()
             } else if pick == "c"{
                 ui.createRental()
+            } else if pick == "v"{
+                ui.listRentals()
+            } else if pick == "q"{
+                return
             }
         }
     }
