@@ -407,16 +407,18 @@ struct Interface {
     
     // For finding customers by their id
     @MainActor func findCustomer(id: String) -> Customer?{
-        for val in customers {
-            if val.id == id {return val}
+        let customer = customers.filter({$0.id == id})
+        if customer.count >= 1{
+            return customer[0]
         }
         return nil
     }
     
     // For finding vehicles from the id
     @MainActor func findVehicle(id: String) -> Vehicle?{
-        for val in vehicles {
-            if val.id == id {return val}
+        let vehicle = vehicles.filter({$0.id == id})
+        if vehicle.count >= 1{
+            return vehicle[0]
         }
         return nil
     }
