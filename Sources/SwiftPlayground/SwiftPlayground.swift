@@ -119,12 +119,14 @@ struct SwiftPlayground {
                 ui.listRentals()
             } else if pick == "q"{
                 return
+            } else if pick == "x"{
+                ui.cancelRental()
             }
         }
     }
 }
 
-func dateFrom(year: Int, month: Int, day: Int) -> Date {
+public func dateFrom(year: Int, month: Int, day: Int) -> Date {
     let calendar = Calendar.current
     return calendar.date(from: DateComponents(year: year, month: month, day: day)) ?? Date()
 }

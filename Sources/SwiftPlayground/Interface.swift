@@ -6,9 +6,6 @@ import Foundation
 //  Created by Torin Painter on 22/04/2026.
 //
 
-// TODO: Use map filter and reduce on the finding values function because you need to find the one with a sertain id or name, and that would work there
-// TODO: Should also make sure that the date that they enter is after the first one, because you can't return the car before you have taken it out
-
 struct Interface {
     func clear(){
         print("\u{001B}")
@@ -32,7 +29,6 @@ struct Interface {
         print("r - Remove a old/wrecked vehicle")
         print("c - Create a new rental")
         print("x - Cancel a rental")
-        print("e - Change a already going or finished rental")
         print("v - View rentals")
         print("q - Quit")
         let pick = readLine()
@@ -87,7 +83,7 @@ struct Interface {
                 if let input = inp {
                     if current == "insurance" || current == "cost" || current == "age" || current == "fuel" {
                         let n = Double(input)
-                        if let num: Double = n{
+                        if let _: Double = n{
                             clear()
                             valid = true
                             vals[vals.firstIndex(where: {$0 == val}) ?? 0].1 = input
@@ -226,13 +222,13 @@ struct Interface {
                 vals[2].1 = "\(out[0]) \(out[1]) \(out[2])"
             })
             
-            if check {
+            if check == true {
                 // check worked
                 if doesThatLookRight(vals: vals){
                     valid3 = true
                 }
             } else {
-                continue check
+                print("The date you entered does not look right")
             }
         }
         
@@ -247,17 +243,34 @@ struct Interface {
             // Same quit
             if raw?.lowercased() == "q" {return}
             
-            let check = checkDate(raw: raw) { out in
+            let check: Bool = checkDate(raw: raw) { out in
                 vals[3].1 = "\(out[0]) \(out[1]) \(out[2])"
             }
             
-            if check {
+            if check == true{
                 if doesThatLookRight(vals: vals){
                     valid4 = true
                 }
             } else {
-                continue
+                print("The date you entered does not look right")
             }
+        }
+        
+        // Push things to the table
+        let customer = findCustomer(id: vals[1].1)
+        let vehicle = findVehicle(id: vals[0].1)
+        let startSplit = vals[2].1.split(separator: " ")
+        let endSplit = vals[3].1.split(separator: " ")
+        let start = dateFrom(year: Int(startSplit[2]) ?? 0, month: Int(startSplit[1]) ?? 0, day: Int(startSplit[0]) ?? 0) // The date will be 0 0 0 if there is an error here
+        let end = dateFrom(year: Int(endSplit[2]) ?? 0, month: Int(endSplit[1]) ?? 0, day: Int(endSplit[0]) ?? 0)
+        
+        // Apped the things to the list
+        if let cust = customer, let veh = vehicle {
+            rentals.append(Rental(id: String(Int.random(in: 100...999)), customer: cust, vehicle: veh, returnDate: end, pickupDate: start))
+        } else {
+            clear()
+            print("Something went wrong, either \(String(describing: customer)) or \(String(describing: vehicle)) is incorrect")
+            let _ = readLine()
         }
     }
     
@@ -272,23 +285,32 @@ struct Interface {
             var out: [Int] = []
             
             // 4. For each section of the now splitted string
-            for spl in 0...split.count - 1 {
+            for spl in 0...(split.count - 1) {
                 // 5. Make sure that it conforms to an int, and if it doesn't then make sure that it will fail the next checks
-                let new = Int(split[spl]) ?? 99999
+                let new = Int(split[spl]) ?? 999999
                 // 6. Check if the section we are on is the year
                 if spl > 1 {
                     // 6.5 Check that its a max of a 4 digit number and not in the past by too far
-                    if new > 9999 && new < 1999{
+                    if new > 9999 || new < 1999{
                         return false
                     }
-                } else { // 7. if its a day or month
-                    // 7.5 check that its a 2 digit number and not below 0 days/months
-                    if new > 99 && new < 0{
+                } else if spl == 1 { // 7. if its a day or month
+                    // 7.5 check that its a 2 digit number and not below 0 days/months also make sure that it makes sense
+                    if new > 12 || new < 0{
                         return false
                     }
+                } else if spl == 0 {
+                    // Check that the day is not above 31 because that wouldent make sense
+                    if new > 31 || new < 0 {
+                        return false
+                    }
+                } else {
+                    return false
                 }
                 // 8. Append the values to the out array
-                out.append(new)
+                if new != 999999 {
+                    out.append(new)
+                }
             }
             // 9. Check that the ammount of values are 3 because there should be a day, month and a year and nothing more or less
             if out.count == 3 {
@@ -340,31 +362,62 @@ struct Interface {
     
     @MainActor public func cancelRental(){
         clear()
-        print("Which rental would you like to remove?")
-        for i in rentals {
-            // A better looking print same but more compact
-            print("---------------------------------")
-            print("ID: \(i.id)")
-            print("Customer:\n\(i.customer.name)")
-            print("Vehicle:\n\(i.vehicle.displayName)")
-            print("Start Date:\n\(i.pickupDate)")
-            print("End Date:\n\(i.returnDate)")
-        }
-        print("Please enter the id of the rental that you wish to remove:")
-        let raw = readLine()
-        // Check if it can be a int, then check if the int matches any of the ids with find value
-        if let text = raw {
-            let id = Int(text) ?? 0 // Since no id will be 0 this will fail
-            
-            // TODO: Continue here
+        var valid = false
+        while valid == false {
+            print("Which rental would you like to remove?")
+            for i in rentals {
+                // A better looking print same but more compact
+                print("---------------------------------")
+                print("ID: \(i.id)")
+                print("Customer:\n\(i.customer.name)")
+                print("Vehicle:\n\(i.vehicle.displayName)")
+                print("Start Date:\n\(i.pickupDate)")
+                print("End Date:\n\(i.returnDate)")
+            }
+            print("Please enter the id of the rental that you wish to remove:")
+            let raw = readLine()
+            // Check if it can be a int, then check if the int matches any of the ids with find value
+            if let text = raw {
+                let rentalToRemove = findRental(id: text) ?? -1
+                if rentalToRemove != -1 {
+                    clear()
+                    print("Removing rental \(text)")
+                    // Remove the rental
+                    rentals.remove(at: rentalToRemove)
+                    valid = true
+                } else {
+                    clear()
+                    print("That is not a valid rental")
+                    // Loop back
+                    valid = false
+                }
+            }
         }
     }
     
-    @MainActor func findRental(id: Int) -> Rental{
+    // HELPER finder functions for finding values based on the ids
+    
+    @MainActor func findRental(id: String) -> Int? {
         // Find things in arrays because that would work and be needed for somethings because everything should be id based
-        for i in rentals {
-            if Int(i.id) == id {return i}
+        for i in 0...(rentals.count - 1) {
+            if rentals[i].id == id {return i}
         }
-        // TODO: Add return statment that will fail the other things something like the array index
+        return -1
+    }
+    
+    // For finding customers by their id
+    @MainActor func findCustomer(id: String) -> Customer?{
+        for val in customers {
+            if val.id == id {return val}
+        }
+        return nil
+    }
+    
+    // For finding vehicles from the id
+    @MainActor func findVehicle(id: String) -> Vehicle?{
+        for val in vehicles {
+            if val.id == id {return val}
+        }
+        return nil
     }
 }
